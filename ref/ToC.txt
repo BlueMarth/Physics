@@ -1,0 +1,32 @@
+
+HKDSE Physics Chapters
+
+1. Heat & Gases
+    a. Temperature, heat, internal energy
+    b. Transfer processes
+    c. Change of state
+    d. Gases
+
+2. Force & Motion
+    a. Position & Movement
+    b. Force & Motion
+    c. Projectile Motion
+    d. Work, Energy, Power
+    e. Momentum
+    f. Uniform circular Motion
+    g. Gravidation
+
+3. Wave Motion
+    a. Nature and properties of waves
+    b. Light
+    c. sound
+
+4. Electricity and Magnetism
+    a. Electrostatics
+    b. Circuits and domestic Electricity
+    c. Electromagnetism
+
+5. Radioactivity & Nuclear Energy
+    a. Radiation & Radioactivity
+    b. Atomic model
+    c. Nuclear energy
