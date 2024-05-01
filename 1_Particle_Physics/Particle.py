@@ -10,8 +10,15 @@ class Particle():
     mass: float
     
     @property
-    def position(self) -> Tuple[float,float]:
+    def inverseMass(self):
+        if self.mass <=0:
+            return 0
+        return 1 / self.mass
+    
+    @property
+    def position(self, time) -> Tuple[float,float]:
         pass
+
 
     @property
     def velocity(self) -> Vec2:
@@ -26,9 +33,8 @@ class Particle():
     def damping(self) -> float:
         pass
 
-    @property
-    def inverseMass(self) -> float:
-        pass
-
+    def integrate(self, dt):
+        assert dt > 0.0
+        self.position.addScaledVector(velocity, duration)
     
 
