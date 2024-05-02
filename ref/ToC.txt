@@ -14,7 +14,7 @@ HKDSE Physics Chapters
     d. Work, Energy, Power
     e. Momentum
     f. Uniform circular Motion
-    g. Gravidation
+    g. Gravitation
 
 3. Wave Motion
     a. Nature and properties of waves

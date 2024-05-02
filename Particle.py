@@ -8,6 +8,13 @@ import Vector2 as Vec2
 class Particle():
 
     mass: float
+    x: float
+    y: float
+
+    def __init__(self, mass, initial_pos_x, initial_pos_y):
+        self.mass = mass
+        self.x = initial_pos_x
+        self.y = initial_pos_y
     
     @property
     def inverseMass(self):
