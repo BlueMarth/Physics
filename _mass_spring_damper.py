@@ -10,20 +10,16 @@ screen = pg.display.set_mode(SIZE)
 clock = pg.time.Clock()
 fps = 60
 
-force = 0 # units
-mass = 1000 # units
+mass = 100 # units
 damper = 25 # units
-spring = 0.2 # units
+spring = 0.5 # units
 
-acc_per_sec = force / mass # pixel per second squared
-acc_per_frame = acc_per_sec / fps # pixel per second per 16.7 ms
-
-def updateForce(mass, damper, spring, rel_x, vel, acc):
-    force = mass * acc - damper * vel - spring * rel_x
+def updateForce(mass, damper, spring, x_diff, vel, acc):
+    force = mass * acc - damper * vel - spring * x_diff
     return force
 
 def updateAcceleration(force):
-    force = updateForce(mass, damper, spring, rel_x, v, acc)
+    force = updateForce(mass, damper, spring, x_diff, vel, acc)
     return force / mass
     
 def updateVelocity(old_v, acc):
@@ -37,18 +33,20 @@ def updatePosition(old_x, v):
     
 
 # mid point is x = 480
-x = 480
-rel_x = 0
-y = 300
-v = 100
-acc = __
-force = 0
+x_real = 900
+x_midline = 480
+x_diff = x_real - x_midline # = 420 in this case
+y = 300 # fixed
+vel = 0 # initial velocity set to zero
+acc = 0 # initial acceleration unknown
+force = 0 # initial force unknown
 
+seconds = 4 # simulation duration
 
-seconds = 4
+while True:
+    
+    seconds -= 1/fps # decrease timer
 
-while True and seconds > 0:
-    seconds -= 1/fps
     screen.fill('black')
     for event in pg.event.get():
         if (
@@ -57,20 +55,16 @@ while True and seconds > 0:
             and event.key == pg.K_ESCAPE
         ):
             exit()
+        
         # elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
-    
-    force = updateForce(mass, damper, spring, rel_x, v, acc)
 
-    x = rel_x + 480
-    pg.draw.circle(screen, 'green', (x, y), 10)
-
-    rel_x = x - 480    
-    rel_x = updatePosition(x,v)
-    v = updateVelocity(v, acc)
+    x_real = x_diff + x_midline
+    pg.draw.circle(screen, 'green', (x_real, y), 10)
+    x_diff = updatePosition(x_diff,vel)
+    vel = updateVelocity(vel, acc)
     acc = updateAcceleration(force)
-    
-    
-    print(int(rel_x))
+            
+    print(int(x_diff))
 
     pg.display.update()
     clock.tick(fps)
