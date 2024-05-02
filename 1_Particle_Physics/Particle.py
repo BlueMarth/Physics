@@ -13,7 +13,8 @@ class Particle():
     def inverseMass(self):
         if self.mass <=0:
             return 0
-        return 1 / self.mass
+        else:
+            return 1 / self.mass
     
     @property
     def position(self, time) -> Tuple[float,float]:
