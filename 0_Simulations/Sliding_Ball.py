@@ -1,4 +1,4 @@
-''' a simulation to show the motion of a box sliding under a constant force'''
+''' a simulation to show the motion of a ball sliding at constant speed vs under a constant appled force '''
 
 import pygame as pg
 from pygame.locals import *

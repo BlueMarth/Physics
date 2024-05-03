@@ -1,4 +1,4 @@
-''' a simulation to show the motion of a box sliding under a constant force'''
+''' a simulation to show the motion of a mass-spring-damper system'''
 
 import pygame as pg
 from pygame.locals import *
@@ -36,9 +36,9 @@ y = 150 # fixed
 vel = 0 # initial velocity set to zero
 acc = 0 # initial acceleration unknown
 
-seconds = 0 # simulation duration
+
 bounce = False # set to True if you want it to bounce off the invisible midline wall
-seconds = 4
+seconds = 4 # simulation duration
 
 while True and seconds > 0:
     
