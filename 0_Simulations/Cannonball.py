@@ -50,9 +50,8 @@ F_WEIGHT = BALL_MASS * GRAVITY # weight acts veritically down
 """ define physical constants for drag """
 # fluid_density, speed, drag_coeff, cross_area, angle_radian
 DENSITY = 0.005
-DRAG_COEFF = 0.05
+DRAG_COEFF = 0.1
 AREA = 3.1416 * BALL_RADIUS**2
-
 
 """ define dynamic parameters (change with time) """
 F_drag = [0, 0] # drag acts opposite to the 
@@ -61,18 +60,18 @@ velocity = [0, 0]
 acceleration = [0, GRAVITY]
 
 """ set up launch conditions """
-launch_position = [SIZE[0]/2, SEA_LEVEL - BALL_RADIUS]
-speed = 10 # pixels per frame
-launch_angle = 60
+position = [SIZE[0] / 2 - 400, SEA_LEVEL - BALL_RADIUS]
+speed = 20 # pixels per frame
+launch_angle = -60
 angle_radian = math.radians(launch_angle)
 velocity[0] = speed * math.cos(angle_radian) # horizontal component
-velocity[1] = -speed * math.sin(angle_radian) # veritcal component, flip y axis
-
+velocity[1] = speed * math.sin(angle_radian) # veritcal component, flip y axis
 
 """ simulation settings """
 bounce = True # set to True if you want it to bounce off the invisble floor on y = 500
-bounce_loss = [0.7, 0.8]
-seconds = 8 # simulation duration
+bounce_loss = [0.85, 0.7] # changing y-loss may cause ever-bouncing glitch
+seconds = 12 # simulation duration
+does_bounce = "Yes"
 
 pg.time.delay(100)
 
@@ -97,35 +96,31 @@ while True and seconds > 0:
     # while not (event.type == pg.KEYDOWN and event.key == pg.K_SPACE): # don't launch until command
     #     continue
     # else:
-    if bounce and (position[1] > (SEA_LEVEL - BALL_RADIUS)): # bounce off the ground
-        """ reduce horizontal velocity due to friction """
-        if velocity[0] > 0.1 or velocity[0] < -0.1: # keep moving horizontally if momentum big enough
-            velocity[0] *= bounce_loss[0]
-        else: # cease off bouncing completely if momentum too small
-            position[0] = 0
-            pass
-        """ reduce vertical velocity due to kinetic energy loss """
-        if velocity[1] > 0.1 or velocity[1] < -0.1: # keep bouncing up if momentum enough
-            velocity[1] = - velocity[1] * bounce_loss[1]
-        else: # stop bouncing if momentum too small
-            position[1] = 0
+    not_enough_momentum = (SEA_LEVEL - 1.1 * BALL_RADIUS < position[1] <= SEA_LEVEL - 0.9 * BALL_RADIUS) and (-1 < velocity[1] < 1)
+    if not_enough_momentum: # stop bouncing if not enough momentum
+            velocity = [0, 0]
+            position[1] = SEA_LEVEL - BALL_RADIUS
+            does_bounce = "No"
+    elif bounce and (position[1] > (SEA_LEVEL - BALL_RADIUS)) and velocity[1] > 0:
+        velocity[0] *= bounce_loss[0]
+        velocity[1] *= -bounce_loss[1]
+        does_bounce = "Yes"
         
-    
-    pg.draw.circle(screen, 'green', [position[0], position[1]], 6)
-    
     position = updatePosition(position, velocity)
     velocity = updateVelocity(velocity, acceleration)
     
     speed_sqrd = velocity[0]**2 + velocity[1]**2
-    angle_radian = -math.radians(math.atan2(velocity[1], velocity[0]))
+    angle_radian = math.radians(math.atan2(velocity[1], velocity[0]))
     drag = getDrag(speed_sqrd, angle_radian)
     
-    acceleration = updateAcceleration(drag)
+    acceleration = updateAcceleration(drag)      
+            
+    pg.draw.circle(screen, 'green', [position[0], position[1]], BALL_RADIUS)
     
-    # print(int(position[0]), int(position[1]))
-    # print(int(seconds), int(position[0]), int(position[1]), int(velocity[0]),
-    #        int(velocity[1]), int(drag[0]), int(drag[1]), int(angle_radian))
-    print(round(speed_sqrd,2), round(velocity[0], 2), round(velocity[1], 2))
+    print('Position', round(position[1], 2),
+          'velocity_y', round(velocity[1], 2),
+          'not enough momentum', not_enough_momentum,
+          'bouncing', does_bounce)
 
     pg.display.update()
     clock.tick(fps)
