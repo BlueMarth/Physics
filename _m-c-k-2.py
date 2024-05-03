@@ -23,12 +23,18 @@ def updatePosition(delta_x, delta_t):
 
 
 ''' initial conditions '''
+x = 2000
+x_mid = 480
+x_real = x_mid + x
+delta_x = 0
+
 x_real = 700
 x_midline = 480 # mid point is x = 480
 x_diff_new = x_real - x_midline # = 120 in this case
 x_diff_old = x_diff_new
 y = 300 # fixed
 delta_x = 0
+
 
 seconds = 4 # simulation duration
 
@@ -47,9 +53,8 @@ while True:
         
         # elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
 
-    x_real = x_diff_new + x_midline
-    x_diff_old = x_diff_new
-    delta_x = x_diff_new - x_diff_old
+    
+
     x_diff_new = updatePosition(delta_x, 1/FPS)
     
     pg.draw.circle(screen, 'green', (x_real, y), 10)
