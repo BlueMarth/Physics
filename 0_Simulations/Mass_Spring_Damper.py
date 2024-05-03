@@ -4,23 +4,20 @@ import pygame as pg
 from pygame.locals import *
 
 
-SIZE = (960, 600)
+SIZE = (960, 300)
 screen = pg.display.set_mode(SIZE)
 
 clock = pg.time.Clock()
 fps = 60
 
 mass = 100 # units
-damper = 25 # units
-spring = 0.5 # units
+spring = 2 # units
+damper = 16 # units
 
-def updateForce(mass, damper, spring, x_diff, vel, acc):
-    force = mass * acc - damper * vel - spring * x_diff
-    return force
 
-def updateAcceleration(force):
-    force = updateForce(mass, damper, spring, x_diff, vel, acc)
-    return force / mass
+def updateAcceleration(x, vel):
+    acc = -(spring * x + damper * vel) / mass
+    return acc
     
 def updateVelocity(old_v, acc):
     new_v = old_v + acc
@@ -29,23 +26,23 @@ def updateVelocity(old_v, acc):
 def updatePosition(old_x, v):
     new_x = old_x + v
     return new_x
-    
-    
+
 
 # mid point is x = 480
 x_real = 900
 x_midline = 480
-x_diff = x_real - x_midline # = 420 in this case
-y = 300 # fixed
+x = x_real - x_midline # = 420 in this case
+y = 150 # fixed
 vel = 0 # initial velocity set to zero
 acc = 0 # initial acceleration unknown
-force = 0 # initial force unknown
 
-seconds = 4 # simulation duration
+seconds = 0 # simulation duration
+bounce = False # set to True if you want it to bounce off the invisible midline wall
+seconds = 4
 
-while True:
+while True and seconds > 0:
     
-    seconds -= 1/fps # decrease timer
+    seconds -= 1/fps # increment timer
 
     screen.fill('black')
     for event in pg.event.get():
@@ -56,15 +53,18 @@ while True:
         ):
             exit()
         
-        # elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+        elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+            x = 420
 
-    x_real = x_diff + x_midline
+    x_real = x + x_midline
+    if bounce and (x_real < x_midline):
+        vel = -vel
     pg.draw.circle(screen, 'green', (x_real, y), 10)
-    x_diff = updatePosition(x_diff,vel)
+    x = updatePosition(x,vel)
     vel = updateVelocity(vel, acc)
-    acc = updateAcceleration(force)
+    acc = updateAcceleration(x, vel)
             
-    print(int(x_diff))
+    print(int(x))
 
     pg.display.update()
     clock.tick(fps)

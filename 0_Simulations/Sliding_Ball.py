@@ -43,11 +43,13 @@ while True:
             exit()
         # elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
     
+    # accelerating sled
     pg.draw.circle(screen, 'green', (x, 200), 10)
     v = updateVelocity(v, acc_per_frame)
     x = updatePosition(x, v)
-        
-    pg.draw.circle(screen, 'green', (x1, 400), 10)
+    
+    # uniform speed sled
+    pg.draw.circle(screen, 'red', (x1, 400), 10)
     v1 = 3
     x1 = updatePosition(x1, v1)
     
