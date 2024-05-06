@@ -33,25 +33,24 @@ def updateVelocity(vel, acc):
     return vel_x, vel_y
 
 def updateAcceleration(drag):
-    acc_x = - drag[0] / BALL_MASS
-    acc_y = (drag[1] + F_WEIGHT) / BALL_MASS
+    acc_x = 0 #- drag[0] / BALL_MASS
+    acc_y = F_WEIGHT / BALL_MASS # (drag[1] + F_WEIGHT) / BALL_MASS
     return acc_x, acc_y
 
-def updateForces():
-    pass
 
 """ define static parameters (don't change with time) """
-BALL_MASS = 50 # units
-BALL_RADIUS = 5 # pixels
-GRAVITY = 0.5 # veritcal acceleration due to gravity
+BALL_MASS = 100 # units
+BALL_RADIUS = 6 # pixels
+GRAVITY = 0.6 # veritcal acceleration due to gravity
 SEA_LEVEL = 500 # y = 100
 F_WEIGHT = BALL_MASS * GRAVITY # weight acts veritically down
+MOMENTUM_LIMIT = BALL_MASS
 
 """ define physical constants for drag """
 # fluid_density, speed, drag_coeff, cross_area, angle_radian
 DENSITY = 0.005
 DRAG_COEFF = 0.1
-AREA = 3.1416 * BALL_RADIUS**2
+AREA = math.pi * BALL_RADIUS**2
 
 """ define dynamic parameters (change with time) """
 F_drag = [0, 0] # drag acts opposite to the 
@@ -60,31 +59,28 @@ velocity = [0, 0]
 acceleration = [0, GRAVITY]
 
 """ set up launch conditions """
-position = [SIZE[0] / 2 - 400, SEA_LEVEL - BALL_RADIUS]
-speed = 20 # pixels per frame
-launch_angle = -60
+position = [SIZE[0] / 2 - 350, SEA_LEVEL - BALL_RADIUS]
+speed = 10 # pixels per frame
+launch_angle = -75
 angle_radian = math.radians(launch_angle)
 velocity[0] = speed * math.cos(angle_radian) # horizontal component
 velocity[1] = speed * math.sin(angle_radian) # veritcal component, flip y axis
 
 """ simulation settings """
 bounce = True # set to True if you want it to bounce off the invisble floor on y = 500
-bounce_loss = [0.85, 0.7] # changing y-loss may cause ever-bouncing glitch
+bounce_loss = [0.85, 0.75] # changing y-loss may cause ever-bouncing glitch
 seconds = 12 # simulation duration
 does_bounce = "Yes"
 
 pg.time.delay(100)
 
 while True and seconds > 0:
+    drawBackground()
     
-    position = list(position)
-    velocity = list(velocity)
-    acceleration = list(acceleration)
+    
 
     seconds -= 1/fps # increment timer
 
-    drawBackground()
-    
     for event in pg.event.get():
         if (
             event.type == pg.QUIT
@@ -96,7 +92,22 @@ while True and seconds > 0:
     # while not (event.type == pg.KEYDOWN and event.key == pg.K_SPACE): # don't launch until command
     #     continue
     # else:
-    not_enough_momentum = (SEA_LEVEL - 1.1 * BALL_RADIUS < position[1] <= SEA_LEVEL - 0.9 * BALL_RADIUS) and (-1 < velocity[1] < 1)
+    position = updatePosition(position, velocity)
+    velocity = updateVelocity(velocity, acceleration)
+    
+    speed_sqrd = velocity[0]**2 + velocity[1]**2
+    momentum = BALL_MASS * math.sqrt(speed_sqrd)
+
+    angle_radian = math.radians(math.atan2(velocity[1], velocity[0]))
+    drag = getDrag(speed_sqrd, angle_radian)
+    
+    acceleration = updateAcceleration(drag)  
+
+    position = list(position)
+    velocity = list(velocity)
+    acceleration = list(acceleration)
+
+    not_enough_momentum = (SEA_LEVEL - 1.5 * BALL_RADIUS < position[1] <= SEA_LEVEL - 0.5 * BALL_RADIUS) and (-10 < momentum < 10)
     if not_enough_momentum: # stop bouncing if not enough momentum
             velocity = [0, 0]
             position[1] = SEA_LEVEL - BALL_RADIUS
@@ -105,16 +116,7 @@ while True and seconds > 0:
         velocity[0] *= bounce_loss[0]
         velocity[1] *= -bounce_loss[1]
         does_bounce = "Yes"
-        
-    position = updatePosition(position, velocity)
-    velocity = updateVelocity(velocity, acceleration)
-    
-    speed_sqrd = velocity[0]**2 + velocity[1]**2
-    angle_radian = math.radians(math.atan2(velocity[1], velocity[0]))
-    drag = getDrag(speed_sqrd, angle_radian)
-    
-    acceleration = updateAcceleration(drag)      
-            
+
     pg.draw.circle(screen, 'green', [position[0], position[1]], BALL_RADIUS)
     
     print('Position', round(position[1], 2),
