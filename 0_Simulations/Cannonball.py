@@ -44,7 +44,6 @@ BALL_RADIUS = 6 # pixels
 GRAVITY = 0.6 # veritcal acceleration due to gravity
 SEA_LEVEL = 500 # y = 100
 F_WEIGHT = BALL_MASS * GRAVITY # weight acts veritically down
-MOMENTUM_LIMIT = BALL_MASS
 
 """ define physical constants for drag """
 # fluid_density, speed, drag_coeff, cross_area, angle_radian
