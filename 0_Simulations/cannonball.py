@@ -33,8 +33,12 @@ def updateVelocity(vel, acc):
     return vel_x, vel_y
 
 def updateAcceleration(drag):
-    acc_x = 0 #- drag[0] / BALL_MASS
-    acc_y = F_WEIGHT / BALL_MASS # (drag[1] + F_WEIGHT) / BALL_MASS
+    acc_x = - drag[0] / BALL_MASS
+    acc_y = (drag[1] + F_WEIGHT) / BALL_MASS
+    if acc_x < 0:
+        acc_x = 0
+    if acc_y < 0:
+        acc_y = 0
     return acc_x, acc_y
 
 
