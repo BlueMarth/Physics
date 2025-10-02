@@ -38,7 +38,7 @@ acc = 0 # initial acceleration unknown
 
 
 bounce = False # set to True if you want it to bounce off the invisible midline wall
-seconds = 4 # simulation duration
+seconds = 6 # simulation duration
 
 while True and seconds > 0:
     
@@ -64,7 +64,7 @@ while True and seconds > 0:
     vel = updateVelocity(vel, acc)
     acc = updateAcceleration(x, vel)
             
-    print(int(x))
+    # print(int(x))
 
     pg.display.update()
     clock.tick(fps)

@@ -53,7 +53,7 @@ while True:
     v1 = 3
     x1 = updatePosition(x1, v1)
     
-    print(int(x),int(v), int(x1), int(v1))
+    # print(int(x),int(v), int(x1), int(v1))
 
     pg.display.update()
     clock.tick(fps)

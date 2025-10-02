@@ -122,10 +122,10 @@ while True and seconds > 0:
 
     pg.draw.circle(screen, 'green', [position[0], position[1]], BALL_RADIUS)
     
-    print('Position', round(position[1], 2),
-          'velocity_y', round(velocity[1], 2),
-          'not enough momentum', not_enough_momentum,
-          'bouncing', does_bounce)
+    # print('Position', round(position[1], 2),
+    #       'velocity_y', round(velocity[1], 2),
+    #       'not enough momentum', not_enough_momentum,
+    #       'bouncing', does_bounce)
 
     pg.display.update()
     clock.tick(fps)
